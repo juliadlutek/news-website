@@ -1,5 +1,9 @@
-let mainContent, articlePerPageInput, articlesNumber, totalNumber;
-let articlesPerPageValue = 15;
+let mainContent,
+  articlePerPageInput,
+  articlesNumber,
+  totalNumber,
+  fetchThrottled;
+let articlesPerPageValue = 5;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
 const main = () => {
@@ -18,6 +22,7 @@ const prepareDomElements = () => {
 
 const prepareDomEvents = () => {
   articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
+  window.addEventListener("scroll", applyInfiniteScroll);
 };
 
 const fetchArticles = () => {
@@ -97,7 +102,20 @@ const reduceSummaryLength = (str) => {
 };
 
 const changeArticlePerPageValue = (e) => {
-  articlesPerPageValue = articlePerPageInput.value;
+  articlesPerPageValue = parseInt(articlePerPageInput.value);
+};
+
+const applyInfiniteScroll = (e) => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  if (scrollHeight - 5 <= clientHeight + scrollTop) {
+    if (!fetchThrottled) {
+      fetchArticles();
+      fetchThrottled = true;
+      setTimeout(() => {
+        fetchThrottled = false;
+      }, 1500);
+    }
+  }
 };
 
 document.addEventListener("DOMContentLoaded", main);
