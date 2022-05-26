@@ -1,16 +1,19 @@
-let mainContent, articlePerPageInput, articlesNumber;
+let mainContent, articlePerPageInput, articlesNumber, totalNumber;
 let articlesPerPageValue = 15;
+const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
 const main = () => {
   prepareDomElements();
   prepareDomEvents();
   fetchArticles();
+  fetchNumberOfArticles();
 };
 
 const prepareDomElements = () => {
   mainContent = document.querySelector(".main-content");
   articlePerPageInput = document.querySelector(".pagination-input");
   articlesNumber = document.querySelector(".articles-number");
+  totalNumber = document.querySelector(".total-number");
 };
 
 const prepareDomEvents = () => {
@@ -18,7 +21,6 @@ const prepareDomEvents = () => {
 };
 
 const fetchArticles = () => {
-  const URL = "https://api.spaceflightnewsapi.net/v3/articles";
   fetch(`${URL}/?_limit=${articlesPerPageValue}`)
     .then((res) => res.json())
     .then((data) => {
@@ -28,6 +30,15 @@ const fetchArticles = () => {
       });
       articlesNumber.textContent =
         parseInt(articlesNumber.textContent) + articlesPerPageValue;
+    })
+    .catch((err) => console.error(err));
+};
+
+const fetchNumberOfArticles = () => {
+  fetch(`${URL}/count`)
+    .then((res) => res.json())
+    .then((data) => {
+      totalNumber.textContent = data;
     })
     .catch((err) => console.error(err));
 };
