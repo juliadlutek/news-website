@@ -26,7 +26,9 @@ const prepareDomEvents = () => {
 };
 
 const fetchArticles = () => {
-  fetch(`${URL}/?_limit=${articlesPerPageValue}`)
+  fetch(
+    `${URL}/?_limit=${articlesPerPageValue}&_start=${articlesNumber.textContent}`
+  )
     .then((res) => res.json())
     .then((data) => {
       data.map((article) => {
