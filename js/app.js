@@ -67,7 +67,7 @@ const createArticleCard = (article) => {
 
   const articleSummary = document.createElement("p");
   articleSummary.classList.add("article-summary");
-  articleSummary.textContent = article.summary;
+  articleSummary.textContent = reduceSummaryLength(article.summary);
 
   const articleLink = document.createElement("a");
   articleLink.classList.add("article-link");
@@ -84,6 +84,16 @@ const createArticleCard = (article) => {
   );
 
   return articleCard;
+};
+
+const reduceSummaryLength = (str) => {
+  if (str.length > 200) {
+    let reducedStr = str.slice(0, 200).split(" ");
+    reducedStr.pop();
+    return reducedStr.join(" ") + "...";
+  } else {
+    return str;
+  }
 };
 
 const changeArticlePerPageValue = (e) => {
