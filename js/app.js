@@ -76,6 +76,15 @@ const createArticleCard = (article) => {
   articleSummary.classList.add("article-summary");
   articleSummary.textContent = reduceSummaryLength(article.summary);
 
+  const likeButton = document.createElement("button");
+  likeButton.classList.add("like-button");
+  likeButton.classList.add("active");
+  likeButton.textContent = "+";
+
+  const dislikeButton = document.createElement("button");
+  dislikeButton.classList.add("like-button");
+  dislikeButton.textContent = "-";
+
   const articleLink = document.createElement("a");
   articleLink.classList.add("article-link");
   articleLink.setAttribute("href", article.url);
@@ -87,6 +96,8 @@ const createArticleCard = (article) => {
     articleDetails,
     articleTitle,
     articleSummary,
+    likeButton,
+    dislikeButton,
     articleLink
   );
 

@@ -160,6 +160,30 @@
       align-self: center;
 }
 
+.main-content .article .like-button {
+  width: 40px;
+  height: 40px;
+  display: none;
+  background-color: #1b2545;
+  color: white;
+  font-size: 30px;
+  border-radius: 10px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  border: none;
+}
+
+.main-content .article .like-button:hover {
+  background-color: #5cd793;
+  color: #1b2545;
+  cursor: pointer;
+}
+
+.main-content .article .active {
+  display: inline;
+}
+
 .main-content .article:hover {
   -webkit-box-shadow: 0 0 1em lightgrey;
           box-shadow: 0 0 1em lightgrey;

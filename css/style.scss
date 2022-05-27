@@ -126,6 +126,28 @@ body {
       object-fit: cover;
       align-self: center;
     }
+    .like-button {
+      width: 40px;
+      height: 40px;
+      display: none;
+      background-color: $color1;
+      color: white;
+      font-size: 30px;
+      border-radius: 10px;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      border: none;
+    }
+
+    .like-button:hover {
+      background-color: $color3;
+      color: $color1;
+      cursor: pointer;
+    }
+    .active {
+      display: inline;
+    }
   }
   .article:hover {
     box-shadow: 0 0 1em lightgrey;
