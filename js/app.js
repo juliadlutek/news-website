@@ -48,8 +48,6 @@ const prepareDomEvents = () => {
       articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
       window.addEventListener("scroll", applyInfiniteScroll);
       break;
-    // case "library":
-    //   break;
   }
 };
 
