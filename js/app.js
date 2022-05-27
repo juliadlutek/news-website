@@ -1,4 +1,4 @@
-let mainContent,
+let homepage,
   articlePerPageInput,
   articlesNumber,
   totalNumber,
@@ -11,25 +11,47 @@ const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 const main = () => {
   prepareDomElements();
   prepareDomEvents();
-  fetchArticles();
-  fetchNumberOfArticles();
+  let page = document.body.id;
+  switch (page) {
+    case "index":
+      fetchArticlesForHomepage();
+      fetchNumberOfArticles();
+      break;
+    case "library":
+      break;
+  }
+  // fetchArticlesForLibrary();
 };
 
 const prepareDomElements = () => {
-  mainContent = document.querySelector(".main-content");
-  articlePerPageInput = document.querySelector(".pagination-input");
-  articlesNumber = document.querySelector(".articles-number");
-  totalNumber = document.querySelector(".total-number");
   articles = document.querySelector(".main-content");
+  let page = document.body.id;
+  switch (page) {
+    case "index":
+      totalNumber = document.querySelector(".total-number");
+      articlesNumber = document.querySelector(".articles-number");
+      homepage = document.querySelector(".homepage");
+      articlePerPageInput = document.querySelector(".pagination-input");
+      break;
+    case "library":
+      break;
+  }
 };
 
 const prepareDomEvents = () => {
-  articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
-  window.addEventListener("scroll", applyInfiniteScroll);
-  articles.addEventListener("click", handleButtonClick);
+  let page = document.body.id;
+  switch (page) {
+    case "index":
+      articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
+      window.addEventListener("scroll", applyInfiniteScroll);
+      articles.addEventListener("click", handleButtonClick);
+      break;
+    // case "library":
+    //   break;
+  }
 };
 
-const fetchArticles = () => {
+const fetchArticlesForHomepage = () => {
   fetch(
     `${URL}/?_limit=${articlesPerPageValue}&_start=${articlesNumber.textContent}`
   )
@@ -37,12 +59,17 @@ const fetchArticles = () => {
     .then((data) => {
       data.map((article) => {
         const newArticle = createArticleCard(article);
-        mainContent.append(newArticle);
+        homepage.append(newArticle);
       });
       articlesNumber.textContent =
         parseInt(articlesNumber.textContent) + articlesPerPageValue;
     })
     .catch((err) => console.error(err));
+};
+
+const fetchArticlesForLibrary = () => {
+  const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
+  console.log(storedIds);
 };
 
 const fetchNumberOfArticles = () => {
@@ -129,7 +156,7 @@ const applyInfiniteScroll = (e) => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
   if (scrollHeight - 5 <= clientHeight + scrollTop) {
     if (!fetchThrottled) {
-      fetchArticles();
+      fetchArticlesForHomepage();
       fetchThrottled = true;
       setTimeout(() => {
         fetchThrottled = false;

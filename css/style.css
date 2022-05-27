@@ -62,7 +62,7 @@
 }
 
 .pagination {
-  margin: 50px auto 0 auto;
+  margin: 50px auto 15px auto;
   width: 80vw;
   display: -webkit-box;
   display: -ms-flexbox;
