@@ -1,4 +1,5 @@
 let homepage,
+  library,
   articlePerPageInput,
   articlesNumber,
   totalNumber,
@@ -18,9 +19,9 @@ const main = () => {
       fetchNumberOfArticles();
       break;
     case "library":
+      fetchArticlesForLibrary();
       break;
   }
-  // fetchArticlesForLibrary();
 };
 
 const prepareDomElements = () => {
@@ -34,17 +35,18 @@ const prepareDomElements = () => {
       articlePerPageInput = document.querySelector(".pagination-input");
       break;
     case "library":
+      library = document.querySelector(".library");
       break;
   }
 };
 
 const prepareDomEvents = () => {
+  articles.addEventListener("click", handleButtonClick);
   let page = document.body.id;
   switch (page) {
     case "index":
       articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
       window.addEventListener("scroll", applyInfiniteScroll);
-      articles.addEventListener("click", handleButtonClick);
       break;
     // case "library":
     //   break;
@@ -69,7 +71,15 @@ const fetchArticlesForHomepage = () => {
 
 const fetchArticlesForLibrary = () => {
   const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-  console.log(storedIds);
+  storedIds.map((id) => {
+    fetch(`${URL}/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const newArticle = createArticleCard(data);
+        library.append(newArticle);
+      })
+      .catch((err) => console.error(err));
+  });
 };
 
 const fetchNumberOfArticles = () => {
@@ -112,12 +122,19 @@ const createArticleCard = (article) => {
   likeButton.setAttribute("src", "../icons/like.png");
   likeButton.classList.add("heart-button");
   likeButton.classList.add("like");
-  likeButton.classList.add("active");
+  // likeButton.classList.add("active");
 
   const dislikeButton = document.createElement("img");
   dislikeButton.setAttribute("src", "../icons/dislike.png");
   dislikeButton.classList.add("heart-button");
   dislikeButton.classList.add("dislike");
+
+  const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
+  if (storedIds.includes(JSON.stringify(article.id))) {
+    dislikeButton.classList.add("active");
+  } else {
+    likeButton.classList.add("active");
+  }
 
   const articleLink = document.createElement("a");
   articleLink.classList.add("article-link");
