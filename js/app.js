@@ -3,7 +3,7 @@ let mainContent,
   articlesNumber,
   totalNumber,
   fetchThrottled;
-let articlesPerPageValue = 5;
+let articlesPerPageValue = 15;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
 const main = () => {
@@ -115,7 +115,7 @@ const applyInfiniteScroll = (e) => {
       fetchThrottled = true;
       setTimeout(() => {
         fetchThrottled = false;
-      }, 1500);
+      }, 1000);
     }
   }
 };
