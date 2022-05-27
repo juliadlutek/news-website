@@ -122,7 +122,6 @@ const createArticleCard = (article) => {
   likeButton.setAttribute("src", "../icons/like.png");
   likeButton.classList.add("heart-button");
   likeButton.classList.add("like");
-  // likeButton.classList.add("active");
 
   const dislikeButton = document.createElement("img");
   dislikeButton.setAttribute("src", "../icons/dislike.png");
@@ -167,6 +166,9 @@ const reduceSummaryLength = (str) => {
 
 const changeArticlePerPageValue = (e) => {
   articlesPerPageValue = parseInt(articlePerPageInput.value);
+  articlesNumber.textContent = 0;
+  homepage.innerHTML = "";
+  fetchArticlesForHomepage();
 };
 
 const applyInfiniteScroll = (e) => {
