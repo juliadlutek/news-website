@@ -2,7 +2,9 @@ let mainContent,
   articlePerPageInput,
   articlesNumber,
   totalNumber,
+  articles,
   fetchThrottled;
+articles;
 let articlesPerPageValue = 15;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
@@ -18,11 +20,13 @@ const prepareDomElements = () => {
   articlePerPageInput = document.querySelector(".pagination-input");
   articlesNumber = document.querySelector(".articles-number");
   totalNumber = document.querySelector(".total-number");
+  articles = document.querySelector(".main-content");
 };
 
 const prepareDomEvents = () => {
   articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
   window.addEventListener("scroll", applyInfiniteScroll);
+  articles.addEventListener("click", handleButtonClick);
 };
 
 const fetchArticles = () => {
@@ -53,6 +57,7 @@ const fetchNumberOfArticles = () => {
 const createArticleCard = (article) => {
   const articleCard = document.createElement("article");
   articleCard.classList.add("article");
+  articleCard.setAttribute("id", article.id);
 
   const articleImage = document.createElement("img");
   articleImage.classList.add("article-image");
@@ -76,14 +81,16 @@ const createArticleCard = (article) => {
   articleSummary.classList.add("article-summary");
   articleSummary.textContent = reduceSummaryLength(article.summary);
 
-  const likeButton = document.createElement("button");
-  likeButton.classList.add("like-button");
+  const likeButton = document.createElement("img");
+  likeButton.setAttribute("src", "../icons/like.png");
+  likeButton.classList.add("heart-button");
+  likeButton.classList.add("like");
   likeButton.classList.add("active");
-  likeButton.textContent = "+";
 
-  const dislikeButton = document.createElement("button");
-  dislikeButton.classList.add("like-button");
-  dislikeButton.textContent = "-";
+  const dislikeButton = document.createElement("img");
+  dislikeButton.setAttribute("src", "../icons/dislike.png");
+  dislikeButton.classList.add("heart-button");
+  dislikeButton.classList.add("dislike");
 
   const articleLink = document.createElement("a");
   articleLink.classList.add("article-link");
@@ -129,6 +136,32 @@ const applyInfiniteScroll = (e) => {
       }, 1000);
     }
   }
+};
+
+const handleButtonClick = (e) => {
+  const thisArticleId = e.target.closest("article").getAttribute("id");
+  const thisButton = e.target.closest(".heart-button");
+  let storedIds = JSON.parse(localStorage.getItem("likedArticles"));
+
+  if (thisButton.classList.contains("like")) {
+    if (storedIds === null) {
+      storedIds = [thisArticleId];
+    } else {
+      storedIds.push(thisArticleId);
+    }
+    thisButton.classList.remove("active");
+    thisButton.nextElementSibling.classList.add("active");
+  }
+  if (thisButton.classList.contains("dislike")) {
+    if (storedIds === null) {
+      storedIds = [];
+    } else {
+      storedIds.pop(thisArticleId);
+    }
+    thisButton.classList.remove("active");
+    thisButton.previousSibling.classList.add("active");
+  }
+  localStorage.setItem("likedArticles", JSON.stringify(storedIds));
 };
 
 document.addEventListener("DOMContentLoaded", main);

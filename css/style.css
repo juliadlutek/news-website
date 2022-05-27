@@ -160,23 +160,16 @@
       align-self: center;
 }
 
-.main-content .article .like-button {
-  width: 40px;
-  height: 40px;
+.main-content .article .heart-button {
+  width: 30px;
+  height: 30px;
   display: none;
-  background-color: #1b2545;
-  color: white;
-  font-size: 30px;
-  border-radius: 10px;
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  border: none;
+  bottom: 25px;
+  left: 25px;
 }
 
-.main-content .article .like-button:hover {
-  background-color: #5cd793;
-  color: #1b2545;
+.main-content .article .heart-button:hover {
   cursor: pointer;
 }
 
