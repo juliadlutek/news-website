@@ -47,6 +47,7 @@ const prepareDomElements = () => {
 const prepareDomEvents = () => {
   articles.addEventListener("click", handleButtonClick);
   backToTop.addEventListener("click", scrollBackToTop);
+  window.addEventListener("scroll", toggleBackToTopButton);
   let page = document.body.id;
   switch (page) {
     case "index":
@@ -181,11 +182,6 @@ const changeArticlePerPageValue = (e) => {
 
 const applyInfiniteScroll = (e) => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-  if (scrollTop === 0) {
-    backToTop.classList.add("hidden");
-  } else {
-    backToTop.classList.remove("hidden");
-  }
   if (scrollHeight - 5 <= clientHeight + scrollTop) {
     if (!fetchThrottled) {
       fetchArticlesForHomepage();
@@ -264,6 +260,15 @@ const handleSorting = (e) => {
 const scrollBackToTop = () => {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
+};
+
+const toggleBackToTopButton = (e) => {
+  const scrollTop = document.documentElement.scrollTop;
+  if (scrollTop === 0) {
+    backToTop.classList.add("hidden");
+  } else {
+    backToTop.classList.remove("hidden");
+  }
 };
 
 document.addEventListener("DOMContentLoaded", main);
