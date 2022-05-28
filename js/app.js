@@ -5,7 +5,8 @@ let homepage,
   totalNumber,
   articles,
   sortMethod,
-  fetchThrottled;
+  fetchThrottled,
+  backToTop;
 let articlesPerPageValue = 15;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
@@ -26,6 +27,7 @@ const main = () => {
 
 const prepareDomElements = () => {
   articles = document.querySelector(".main-content");
+  backToTop = document.querySelector(".back-to-top");
   let page = document.body.id;
   switch (page) {
     case "index":
@@ -44,6 +46,7 @@ const prepareDomElements = () => {
 
 const prepareDomEvents = () => {
   articles.addEventListener("click", handleButtonClick);
+  backToTop.addEventListener("click", scrollBackToTop);
   let page = document.body.id;
   switch (page) {
     case "index":
@@ -142,6 +145,7 @@ const createArticleCard = (article) => {
   const articleLink = document.createElement("a");
   articleLink.classList.add("article-link");
   articleLink.setAttribute("href", article.url);
+  articleLink.setAttribute("target", "_blank");
   articleLink.textContent = "Read article";
 
   articleDetails.append(newsSite, publicationDate);
@@ -177,6 +181,11 @@ const changeArticlePerPageValue = (e) => {
 
 const applyInfiniteScroll = (e) => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  if (scrollTop === 0) {
+    backToTop.classList.add("hidden");
+  } else {
+    backToTop.classList.remove("hidden");
+  }
   if (scrollHeight - 5 <= clientHeight + scrollTop) {
     if (!fetchThrottled) {
       fetchArticlesForHomepage();
@@ -250,6 +259,11 @@ const handleSorting = (e) => {
   articles.map((article) => {
     library.append(article);
   });
+};
+
+const scrollBackToTop = () => {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
 };
 
 document.addEventListener("DOMContentLoaded", main);
