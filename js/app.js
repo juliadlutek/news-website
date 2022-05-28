@@ -4,8 +4,8 @@ let homepage,
   articlesNumber,
   totalNumber,
   articles,
+  sortMethod,
   fetchThrottled;
-articles;
 let articlesPerPageValue = 15;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
@@ -36,6 +36,8 @@ const prepareDomElements = () => {
       break;
     case "library":
       library = document.querySelector(".library");
+      sortMethod = document.querySelector(".sort-method");
+
       break;
   }
 };
@@ -47,6 +49,9 @@ const prepareDomEvents = () => {
     case "index":
       articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
       window.addEventListener("scroll", applyInfiniteScroll);
+      break;
+    case "library":
+      sortMethod.addEventListener("change", handleSorting);
       break;
   }
 };
@@ -107,6 +112,7 @@ const createArticleCard = (article) => {
 
   const publicationDate = document.createElement("p");
   publicationDate.textContent = article.publishedAt.substring(0, 10);
+  publicationDate.classList.add("publication-date");
 
   const articleTitle = document.createElement("h3");
   articleTitle.classList.add("article-title");
@@ -206,6 +212,44 @@ const handleButtonClick = (e) => {
     thisButton.previousSibling.classList.add("active");
   }
   localStorage.setItem("likedArticles", JSON.stringify(storedIds));
+};
+
+const handleSorting = (e) => {
+  const value = e.target.value;
+  let articles = Array.from(library.children);
+  switch (value) {
+    case "title asc":
+      articles.sort((a, b) => {
+        let titleA = a.querySelector(".article-title").textContent;
+        let titleB = b.querySelector(".article-title").textContent;
+        return titleA > titleB ? 1 : -1;
+      });
+      break;
+    case "title desc":
+      articles.sort((a, b) => {
+        let titleA = a.querySelector(".article-title").textContent;
+        let titleB = b.querySelector(".article-title").textContent;
+        return titleA < titleB ? 1 : -1;
+      });
+      break;
+    case "date asc":
+      articles.sort((a, b) => {
+        let dateA = new Date(a.querySelector(".publication-date").textContent);
+        let dateB = new Date(b.querySelector(".publication-date").textContent);
+        return dateA > dateB ? 1 : -1;
+      });
+      break;
+    case "date desc":
+      articles.sort((a, b) => {
+        let dateA = new Date(a.querySelector(".publication-date").textContent);
+        let dateB = new Date(b.querySelector(".publication-date").textContent);
+        return dateA < dateB ? 1 : -1;
+      });
+      break;
+  }
+  articles.map((article) => {
+    library.append(article);
+  });
 };
 
 document.addEventListener("DOMContentLoaded", main);

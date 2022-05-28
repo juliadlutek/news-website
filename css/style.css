@@ -61,7 +61,7 @@
   height: 150px;
 }
 
-.pagination {
+.articles-info {
   margin: 50px auto 15px auto;
   width: 80vw;
   display: -webkit-box;
@@ -75,13 +75,23 @@
   text-align: center;
 }
 
-.pagination .pagination-input {
+.articles-info .pagination-input {
   width: 25px;
   margin-left: 10px;
   border: none;
   padding: 2px 4px;
   border-radius: 3px;
   background-color: #c2cdf0;
+}
+
+.articles-info .sort-method {
+  width: 130px;
+  margin-left: 10px;
+  border: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background-color: #c2cdf0;
+  font-size: 15px;
 }
 
 .main-content {

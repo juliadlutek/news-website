@@ -54,7 +54,7 @@ body {
   }
 }
 
-.pagination {
+.articles-info {
   margin: 50px auto 15px auto;
   width: 80vw;
   display: flex;
@@ -69,6 +69,15 @@ body {
     padding: 2px 4px;
     border-radius: 3px;
     background-color: $color2;
+  }
+  .sort-method {
+    width: 130px;
+    margin-left: 10px;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 3px;
+    background-color: $color2;
+    font-size: 15px;
   }
 }
 .main-content {
