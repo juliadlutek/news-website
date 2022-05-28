@@ -60,6 +60,8 @@ const prepareDomEvents = () => {
   }
 };
 
+// FUNCTIONS FOR API REQUESTS
+
 const fetchArticlesForHomepage = () => {
   fetch(
     `${URL}/?_limit=${articlesPerPageValue}&_start=${articlesNumber.textContent}`
@@ -98,80 +100,7 @@ const fetchNumberOfArticles = () => {
     .catch((err) => console.error(err));
 };
 
-const createArticleCard = (article) => {
-  const articleCard = document.createElement("article");
-  articleCard.classList.add("article");
-  articleCard.setAttribute("id", article.id);
-
-  const articleImage = document.createElement("img");
-  articleImage.classList.add("article-image");
-  articleImage.setAttribute("src", article.imageUrl);
-  articleImage.setAttribute("alt", "article image");
-
-  const articleDetails = document.createElement("div");
-  articleDetails.classList.add("article-details");
-
-  const newsSite = document.createElement("p");
-  newsSite.textContent = article.newsSite;
-
-  const publicationDate = document.createElement("p");
-  publicationDate.textContent = article.publishedAt.substring(0, 10);
-  publicationDate.classList.add("publication-date");
-
-  const articleTitle = document.createElement("h3");
-  articleTitle.classList.add("article-title");
-  articleTitle.textContent = article.title;
-
-  const articleSummary = document.createElement("p");
-  articleSummary.classList.add("article-summary");
-  articleSummary.textContent = reduceSummaryLength(article.summary);
-
-  const likeButton = document.createElement("img");
-  likeButton.setAttribute("src", "../icons/like.png");
-  likeButton.classList.add("heart-button");
-  likeButton.classList.add("like");
-
-  const dislikeButton = document.createElement("img");
-  dislikeButton.setAttribute("src", "../icons/dislike.png");
-  dislikeButton.classList.add("heart-button");
-  dislikeButton.classList.add("dislike");
-
-  const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-  if (storedIds.includes(JSON.stringify(article.id))) {
-    dislikeButton.classList.add("active");
-  } else {
-    likeButton.classList.add("active");
-  }
-
-  const articleLink = document.createElement("a");
-  articleLink.classList.add("article-link");
-  articleLink.setAttribute("href", article.url);
-  articleLink.setAttribute("target", "_blank");
-  articleLink.textContent = "Read article";
-
-  articleDetails.append(newsSite, publicationDate);
-  articleCard.append(
-    articleImage,
-    articleDetails,
-    articleTitle,
-    articleSummary,
-    likeButton,
-    dislikeButton,
-    articleLink
-  );
-
-  return articleCard;
-};
-
-const reduceSummaryLength = (str) => {
-  if (str.length > 200) {
-    let reducedStr = str.slice(0, 200).split(" ");
-    reducedStr.pop();
-    return reducedStr.join(" ") + "...";
-  } else {
-    return str;
-  }
-};
+// FUNCTIONS FOR HANDLING EVENTS
 
 const changeArticlePerPageValue = (e) => {
   articlesPerPageValue = parseInt(articlePerPageInput.value);
@@ -257,17 +186,96 @@ const handleSorting = (e) => {
   });
 };
 
-const scrollBackToTop = () => {
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-};
-
 const toggleBackToTopButton = (e) => {
   const scrollTop = document.documentElement.scrollTop;
   if (scrollTop === 0) {
     backToTop.classList.add("hidden");
   } else {
     backToTop.classList.remove("hidden");
+  }
+};
+
+// FUNCTION FOR CREATING ELEMENTS
+
+const createArticleCard = (article) => {
+  const articleCard = document.createElement("article");
+  articleCard.classList.add("article");
+  articleCard.setAttribute("id", article.id);
+
+  const articleImage = document.createElement("img");
+  articleImage.classList.add("article-image");
+  articleImage.setAttribute("src", article.imageUrl);
+  articleImage.setAttribute("alt", "article image");
+
+  const articleDetails = document.createElement("div");
+  articleDetails.classList.add("article-details");
+
+  const newsSite = document.createElement("p");
+  newsSite.textContent = article.newsSite;
+
+  const publicationDate = document.createElement("p");
+  publicationDate.textContent = article.publishedAt.substring(0, 10);
+  publicationDate.classList.add("publication-date");
+
+  const articleTitle = document.createElement("h3");
+  articleTitle.classList.add("article-title");
+  articleTitle.textContent = article.title;
+
+  const articleSummary = document.createElement("p");
+  articleSummary.classList.add("article-summary");
+  articleSummary.textContent = reduceSummaryLength(article.summary);
+
+  const likeButton = document.createElement("img");
+  likeButton.setAttribute("src", "../icons/like.png");
+  likeButton.classList.add("heart-button");
+  likeButton.classList.add("like");
+
+  const dislikeButton = document.createElement("img");
+  dislikeButton.setAttribute("src", "../icons/dislike.png");
+  dislikeButton.classList.add("heart-button");
+  dislikeButton.classList.add("dislike");
+
+  const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
+  if (storedIds.includes(JSON.stringify(article.id))) {
+    dislikeButton.classList.add("active");
+  } else {
+    likeButton.classList.add("active");
+  }
+
+  const articleLink = document.createElement("a");
+  articleLink.classList.add("article-link");
+  articleLink.setAttribute("href", article.url);
+  articleLink.setAttribute("target", "_blank");
+  articleLink.textContent = "Read article";
+
+  articleDetails.append(newsSite, publicationDate);
+  articleCard.append(
+    articleImage,
+    articleDetails,
+    articleTitle,
+    articleSummary,
+    likeButton,
+    dislikeButton,
+    articleLink
+  );
+
+  return articleCard;
+};
+
+// OTHER FUNCTIONS
+
+const scrollBackToTop = () => {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+};
+
+const reduceSummaryLength = (str) => {
+  if (str.length > 200) {
+    let reducedStr = str.slice(0, 200).split(" ");
+    reducedStr.pop();
+    return reducedStr.join(" ") + "...";
+  } else {
+    return str;
   }
 };
 
