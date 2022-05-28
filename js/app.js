@@ -6,6 +6,7 @@ let homepage,
   articles,
   sortMethod,
   fetchThrottled,
+  loadingInfo,
   backToTop;
 let articlesPerPageValue = 15;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
@@ -28,6 +29,7 @@ const main = () => {
 const prepareDomElements = () => {
   articles = document.querySelector(".main-content");
   backToTop = document.querySelector(".back-to-top");
+  loadingInfo = document.querySelector(".loading");
   let page = document.body.id;
   switch (page) {
     case "index":
@@ -63,6 +65,7 @@ const prepareDomEvents = () => {
 // FUNCTIONS FOR API REQUESTS
 
 const fetchArticlesForHomepage = () => {
+  loadingInfo.classList.remove("hidden");
   fetch(
     `${URL}/?_limit=${articlesPerPageValue}&_start=${articlesNumber.textContent}`
   )
@@ -72,6 +75,7 @@ const fetchArticlesForHomepage = () => {
         const newArticle = createArticleCard(article);
         homepage.append(newArticle);
       });
+      loadingInfo.classList.add("hidden");
       articlesNumber.textContent =
         parseInt(articlesNumber.textContent) + articlesPerPageValue;
     })
@@ -79,6 +83,7 @@ const fetchArticlesForHomepage = () => {
 };
 
 const fetchArticlesForLibrary = () => {
+  loadingInfo.classList.remove("hidden");
   const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
   storedIds.map((id) => {
     fetch(`${URL}/${id}`)
@@ -86,6 +91,7 @@ const fetchArticlesForLibrary = () => {
       .then((data) => {
         const newArticle = createArticleCard(data);
         library.append(newArticle);
+        loadingInfo.classList.add("hidden");
       })
       .catch((err) => console.error(err));
   });

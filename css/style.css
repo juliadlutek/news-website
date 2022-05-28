@@ -211,6 +211,14 @@ body {
   cursor: pointer;
 }
 
+.loading {
+  font-size: 25px;
+  color: #1b2545;
+  font-weight: bold;
+  text-align: center;
+  margin: 50px;
+}
+
 .hidden {
   display: none;
 }

@@ -173,6 +173,14 @@ body {
   cursor: pointer;
 }
 
+.loading {
+  font-size: 25px;
+  color: $color1;
+  font-weight: bold;
+  text-align: center;
+  margin: 50px;
+}
+
 .hidden {
   display: none;
 }
