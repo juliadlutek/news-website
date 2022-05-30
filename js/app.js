@@ -1,13 +1,12 @@
-let homepage,
-  library,
+let articlesOnHomepage,
+  articlesOnLibrary,
   articlePerPageInput,
-  articlesNumber,
-  totalNumber,
-  articles,
+  loadedArticlesNumber,
+  totalNumberOfArticles,
   sortMethod,
   fetchThrottled,
   loadingInfo,
-  backToTop;
+  backToTopButton;
 let articlesPerPageValue = 15;
 const URL = "https://api.spaceflightnewsapi.net/v3/articles";
 
@@ -27,19 +26,18 @@ const main = () => {
 };
 
 const prepareDomElements = () => {
-  articles = document.querySelector(".main-content");
-  backToTop = document.querySelector(".back-to-top");
+  backToTopButton = document.querySelector(".back-to-top");
   loadingInfo = document.querySelector(".loading");
   let page = document.body.id;
   switch (page) {
     case "index":
-      totalNumber = document.querySelector(".total-number");
-      articlesNumber = document.querySelector(".articles-number");
-      homepage = document.querySelector(".homepage");
+      totalNumberOfArticles = document.querySelector(".total-number");
+      loadedArticlesNumber = document.querySelector(".articles-number");
+      articlesOnHomepage = document.querySelector(".homepage");
       articlePerPageInput = document.querySelector(".pagination-input");
       break;
     case "library":
-      library = document.querySelector(".library");
+      articlesOnLibrary = document.querySelector(".library");
       sortMethod = document.querySelector(".sort-method");
 
       break;
@@ -47,17 +45,19 @@ const prepareDomElements = () => {
 };
 
 const prepareDomEvents = () => {
-  articles.addEventListener("click", handleButtonClick);
-  backToTop.addEventListener("click", scrollBackToTop);
+  backToTopButton.addEventListener("click", scrollBackToTop);
   window.addEventListener("scroll", toggleBackToTopButton);
   let page = document.body.id;
   switch (page) {
     case "index":
+      articlesOnHomepage.addEventListener("click", handleLikeButtonClick);
       articlePerPageInput.addEventListener("change", changeArticlePerPageValue);
       window.addEventListener("scroll", applyInfiniteScroll);
       break;
     case "library":
-      sortMethod.addEventListener("change", handleSorting);
+      articlesOnLibrary.addEventListener("click", handleLikeButtonClick);
+
+      sortMethod.addEventListener("change", handleSortMethodChange);
       break;
   }
 };
@@ -67,17 +67,17 @@ const prepareDomEvents = () => {
 const fetchArticlesForHomepage = () => {
   loadingInfo.classList.remove("hidden");
   fetch(
-    `${URL}/?_limit=${articlesPerPageValue}&_start=${articlesNumber.textContent}`
+    `${URL}/?_limit=${articlesPerPageValue}&_start=${loadedArticlesNumber.textContent}`
   )
     .then((res) => res.json())
     .then((data) => {
       data.map((article) => {
         const newArticle = createArticleCard(article);
-        homepage.append(newArticle);
+        articlesOnHomepage.append(newArticle);
       });
       loadingInfo.classList.add("hidden");
-      articlesNumber.textContent =
-        parseInt(articlesNumber.textContent) + articlesPerPageValue;
+      loadedArticlesNumber.textContent =
+        parseInt(loadedArticlesNumber.textContent) + articlesPerPageValue;
     })
     .catch((err) => console.error(err));
 };
@@ -90,7 +90,7 @@ const fetchArticlesForLibrary = () => {
       .then((res) => res.json())
       .then((data) => {
         const newArticle = createArticleCard(data);
-        library.append(newArticle);
+        articlesOnLibrary.append(newArticle);
         loadingInfo.classList.add("hidden");
       })
       .catch((err) => console.error(err));
@@ -101,7 +101,7 @@ const fetchNumberOfArticles = () => {
   fetch(`${URL}/count`)
     .then((res) => res.json())
     .then((data) => {
-      totalNumber.textContent = data;
+      totalNumberOfArticles.textContent = data;
     })
     .catch((err) => console.error(err));
 };
@@ -110,8 +110,8 @@ const fetchNumberOfArticles = () => {
 
 const changeArticlePerPageValue = (e) => {
   articlesPerPageValue = parseInt(articlePerPageInput.value);
-  articlesNumber.textContent = 0;
-  homepage.innerHTML = "";
+  loadedArticlesNumber.textContent = 0;
+  articlesOnHomepage.innerHTML = "";
   fetchArticlesForHomepage();
 };
 
@@ -128,11 +128,10 @@ const applyInfiniteScroll = (e) => {
   }
 };
 
-const handleButtonClick = (e) => {
+const handleLikeButtonClick = (e) => {
   const thisArticleId = e.target.closest("article").getAttribute("id");
   const thisButton = e.target.closest(".heart-button");
   let storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-
   if (thisButton.classList.contains("like")) {
     if (storedIds === null) {
       storedIds = [thisArticleId];
@@ -154,9 +153,9 @@ const handleButtonClick = (e) => {
   localStorage.setItem("likedArticles", JSON.stringify(storedIds));
 };
 
-const handleSorting = (e) => {
+const handleSortMethodChange = (e) => {
   const value = e.target.value;
-  let articles = Array.from(library.children);
+  let articles = Array.from(articlesOnLibrary.children);
   switch (value) {
     case "title asc":
       articles.sort((a, b) => {
@@ -188,16 +187,16 @@ const handleSorting = (e) => {
       break;
   }
   articles.map((article) => {
-    library.append(article);
+    articlesOnLibrary.append(article);
   });
 };
 
 const toggleBackToTopButton = (e) => {
   const scrollTop = document.documentElement.scrollTop;
   if (scrollTop === 0) {
-    backToTop.classList.add("hidden");
+    backToTopButton.classList.add("hidden");
   } else {
-    backToTop.classList.remove("hidden");
+    backToTopButton.classList.remove("hidden");
   }
 };
 
