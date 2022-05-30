@@ -185,6 +185,13 @@ body {
   display: none;
 }
 
+.empty-library {
+  color: #1b2545;
+  grid-column: 1 / -1;
+  font-size: 25px;
+  margin: 50px;
+}
+
 @media (min-width: 600px) {
   .main-content {
     grid-template-columns: repeat(2, 1fr);

@@ -85,16 +85,24 @@ const fetchArticlesForHomepage = () => {
 const fetchArticlesForLibrary = () => {
   loadingInfo.classList.remove("hidden");
   const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-  storedIds.map((id) => {
-    fetch(`${URL}/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const newArticle = createArticleCard(data);
-        articlesOnLibrary.append(newArticle);
-        loadingInfo.classList.add("hidden");
-      })
-      .catch((err) => console.error(err));
-  });
+  if (storedIds != null) {
+    storedIds.map((id) => {
+      fetch(`${URL}/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          const newArticle = createArticleCard(data);
+          articlesOnLibrary.append(newArticle);
+        })
+        .catch((err) => console.error(err));
+    });
+  } else {
+    const emptyLibraryInfo = document.createElement("p");
+    emptyLibraryInfo.classList.add("empty-library");
+    emptyLibraryInfo.textContent =
+      "Your library is empty, go to the home page and look for articles you like... 🔎";
+    articlesOnLibrary.appendChild(emptyLibraryInfo);
+  }
+  loadingInfo.classList.add("hidden");
 };
 
 const fetchNumberOfArticles = () => {
@@ -129,28 +137,30 @@ const applyInfiniteScroll = (e) => {
 };
 
 const handleLikeButtonClick = (e) => {
-  const thisArticleId = e.target.closest("article").getAttribute("id");
-  const thisButton = e.target.closest(".heart-button");
-  let storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-  if (thisButton.classList.contains("like")) {
-    if (storedIds === null) {
-      storedIds = [thisArticleId];
-    } else {
-      storedIds.push(thisArticleId);
+  if (!e.target.classList.contains("empty-library")) {
+    const thisArticleId = e.target.closest("article").getAttribute("id");
+    const thisButton = e.target.closest(".heart-button");
+    let storedIds = JSON.parse(localStorage.getItem("likedArticles"));
+    if (thisButton.classList.contains("like")) {
+      if (storedIds === null) {
+        storedIds = [thisArticleId];
+      } else {
+        storedIds.push(thisArticleId);
+      }
+      thisButton.classList.remove("active");
+      thisButton.nextElementSibling.classList.add("active");
     }
-    thisButton.classList.remove("active");
-    thisButton.nextElementSibling.classList.add("active");
-  }
-  if (thisButton.classList.contains("dislike")) {
-    if (storedIds === null) {
-      storedIds = [];
-    } else {
-      storedIds.pop(thisArticleId);
+    if (thisButton.classList.contains("dislike")) {
+      if (storedIds === null) {
+        storedIds = [];
+      } else {
+        storedIds.pop(thisArticleId);
+      }
+      thisButton.classList.remove("active");
+      thisButton.previousSibling.classList.add("active");
     }
-    thisButton.classList.remove("active");
-    thisButton.previousSibling.classList.add("active");
+    localStorage.setItem("likedArticles", JSON.stringify(storedIds));
   }
-  localStorage.setItem("likedArticles", JSON.stringify(storedIds));
 };
 
 const handleSortMethodChange = (e) => {
@@ -241,7 +251,7 @@ const createArticleCard = (article) => {
   dislikeButton.classList.add("dislike");
 
   const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-  if (storedIds.includes(JSON.stringify(article.id))) {
+  if (storedIds != null && storedIds.includes(JSON.stringify(article.id))) {
     dislikeButton.classList.add("active");
   } else {
     likeButton.classList.add("active");
