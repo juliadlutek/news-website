@@ -85,7 +85,7 @@ const fetchArticlesForHomepage = () => {
 const fetchArticlesForLibrary = () => {
   loadingInfo.classList.remove("hidden");
   const storedIds = JSON.parse(localStorage.getItem("likedArticles"));
-  if (storedIds != null) {
+  if (storedIds != null && storedIds.length > 0) {
     storedIds.map((id) => {
       fetch(`${URL}/${id}`)
         .then((res) => res.json())
