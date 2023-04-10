@@ -1,6 +1,6 @@
 # Spaceflight News App
 
-[Link to page deployed on Netlify](https://6294babb2b06da0008d82677--bejewelled-truffle-e42f0f.netlify.app/html/index.html)
+[Link to page deployed on Netlify](https://bejewelled-truffle-e42f0f.netlify.app/)
 
 ## Short description and functionality
 
